@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "704829717592",
+    "project_id": "sandboxnotes",
+    "storage_bucket": "sandboxnotes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:704829717592:android:cbb550f0b26eff26405e2d",
+        "android_client_info": {
+          "package_name": "sandbox.coach.sandboxnotes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrcTL1gg9s0oWs2nQacOq1xnyWlYoV76s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
