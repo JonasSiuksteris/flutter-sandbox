@@ -1,8 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
-
 import 'package:sandboxnotes/constants/routes.dart';
+import 'package:sandboxnotes/utilities/show_error_dialog.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -72,9 +74,23 @@ class _LoginViewState extends State<LoginView> {
                   (routes) => false,
                 );
               } on FirebaseAuthException catch (e) {
+                devtools.log(e.toString());
                 if (e.code == "INVALID_LOGIN_CREDENTIALS") {
-                  devtools.log("Bad password");
+                  await showErrorDialog(
+                    context,
+                    'User not found or invalid login credentials',
+                  );
+                } else {
+                  await showErrorDialog(
+                    context,
+                    'Unexpected error occured: ${e.code}',
+                  );
                 }
+              } catch (e) {
+                await showErrorDialog(
+                  context,
+                  'Unexpected error occured: ${e.toString()}',
+                );
               }
             },
             child: const Text("Login"),
