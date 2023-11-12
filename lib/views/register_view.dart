@@ -69,29 +69,7 @@ class _RegisterViewState extends State<RegisterView> {
                 );
                 userCredential.user?.sendEmailVerification();
                 Navigator.of(context).pushNamed(verifyEmailRoute);
-              } on FirebaseAuthException catch (e) {
-                if (e.code == "weak-password") {
-                  await showErrorDialog(
-                    context,
-                    'Password is too weak. Try again',
-                  );
-                } else if (e.code == "email-already-in-use") {
-                  await showErrorDialog(
-                    context,
-                    'Email is already in use. Try again',
-                  );
-                } else if (e.code == "invalid-email") {
-                  await showErrorDialog(
-                    context,
-                    'Email is not valid. Try again',
-                  );
-                }
-              } catch (e) {
-                await showErrorDialog(
-                  context,
-                  'Unexpected error occured: ${e.toString()}',
-                );
-              }
+              } on FirebaseAuthException catch (e) {}
             },
             child: const Text("Register"),
           ),
