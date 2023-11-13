@@ -1,9 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
 import 'package:sandboxnotes/constants/routes.dart';
+import 'package:sandboxnotes/services/auth/auth_exceptions.dart';
+import 'package:sandboxnotes/services/auth/auth_service.dart';
 import 'package:sandboxnotes/utilities/show_error_dialog.dart';
 
 class LoginView extends StatefulWidget {
@@ -65,37 +65,31 @@ class _LoginViewState extends State<LoginView> {
               final password = _password.text;
 
               try {
-                var userCredentials =
-                    await FirebaseAuth.instance.signInWithEmailAndPassword(
+                var user = await AuthService.firebase().logIn(
                   email: email,
                   password: password,
                 );
 
-                if (userCredentials.user?.emailVerified ?? false) {
+                if (user.isEmailVerified) {
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     notesRoute,
                     (routes) => false,
                   );
                 } else {
-                  Navigator.of(context).pushNamed(verifyEmailRoute);
-                }
-              } on FirebaseAuthException catch (e) {
-                devtools.log(e.toString());
-                if (e.code == "INVALID_LOGIN_CREDENTIALS") {
-                  await showErrorDialog(
-                    context,
-                    'User not found or invalid login credentials',
-                  );
-                } else {
-                  await showErrorDialog(
-                    context,
-                    'Unexpected error occured: ${e.code}',
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    verifyEmailRoute,
+                    (route) => false,
                   );
                 }
-              } catch (e) {
+              } on WrongPasswordAuthException {
                 await showErrorDialog(
                   context,
-                  'Unexpected error occured: ${e.toString()}',
+                  'User not found or invalid login credentials',
+                );
+              } on GenericAuthException {
+                await showErrorDialog(
+                  context,
+                  'Unexpected authentication error occured}',
                 );
               }
             },
